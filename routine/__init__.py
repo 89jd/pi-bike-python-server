@@ -133,7 +133,7 @@ class BikeRoutine():
         self.sensor = self.sensor_factory()
         self.sensor.on_revolution = self.on_revolution
         self.sensor.on_idle = self.on_idle
-        self.sensor.start(debug=True)
+        self.sensor.start(debug=False)
 
 def test():
     br = BikeRoutine(lambda: BikeSensor())
