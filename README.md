@@ -1,5 +1,14 @@
 # pi-bike-server
 
+## Installation
+```
+git clone https://github.com/89jd/pi-bike-server
+cd pi-bike-server
+python -m venv .venv
+pip install -r requirements.txt
+python server.py [debug]
+```
+
 ## Config File example
 
 ```json
