@@ -1,0 +1,3 @@
+[submodule "bikesensor"]
+	path = bikesensor
+	url = https://github.com/89jd/pi-bike-sensor
