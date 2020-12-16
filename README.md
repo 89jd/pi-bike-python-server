@@ -5,6 +5,7 @@
 git clone https://github.com/89jd/pi-bike-server
 cd pi-bike-server
 python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 python server.py [debug]
 ```
