@@ -4,6 +4,8 @@
 ```
 git clone https://github.com/89jd/pi-bike-server
 cd pi-bike-server
+git submodule init
+git submodule update
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
