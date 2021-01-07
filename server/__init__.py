@@ -16,7 +16,7 @@ class BikeDataServer():
         if debug_image:
             @self.app.route('/static/lcd-image.png')
             def send_lcd():
-                return send_from_directory('/home/pi/', 'lcd-image.png')
+                return send_from_directory("/".join(debug_image.split('/')[0:-1]), debug_image.split('/')[-1])
         
         self.on_exercise_started: Callable[[str], None] = None
         self.on_exercise_stopped: Callable[[str], None] = None

@@ -65,6 +65,7 @@ class BikeRoutine():
                     self.on_update(self._calculate_values_from_rev(t))
 
     def _pause(self):
+        self.firebase.push_heartrate_request(False)
         self.paused = True
         self.stop_timer()
 
@@ -74,6 +75,7 @@ class BikeRoutine():
             self.sensor.pause()
 
     def resume(self):
+        self.firebase.push_heartrate_request(True)
         self.start_timer()
         self.paused = False
         if self.sensor != None:
@@ -84,7 +86,6 @@ class BikeRoutine():
         
     def _calculate_values_from_rev(self, time_in_seconds):  
         self.total_time += time_in_seconds
-        distance_in_metres = 3.4 #Matches exercise bike speed 
         distance_in_metres = properties.bike.revolution_distance
         metres_per_seconds = distance_in_metres / time_in_seconds
         metres_per_seconds_history.append(metres_per_seconds)        
@@ -107,6 +108,8 @@ class BikeRoutine():
         if self.heart_rate_updated and self.heart_rate > 0:
             x['heartrate'] = self.heart_rate
             self.heart_rate = 0
+
+        print_debug(x)
         
         self.data_points.append(x)
         
@@ -116,16 +119,18 @@ class BikeRoutine():
         self.start_time = current_millis()
 
     def publish_heartrate(self, heartrate):
+        print_debug(f'Heartrate retrieved: {heartrate}')
         self.heart_rate = heartrate
         self.heart_rate_updated = current_millis()
 
     def stop(self):
+        self.firebase.push_heartrate_request(False)
         data_points = self.data_points
         Thread(target=self.firebase.write_workout, args=(data_points,), daemon=True,).start()
         self.stop_timer()
         if self.sensor:
             self.sensor.stop()
-    
+        
     def start(self):
         self.initialise()
         if self.sensor:
@@ -133,7 +138,8 @@ class BikeRoutine():
         self.sensor = self.sensor_factory()
         self.sensor.on_revolution = self.on_revolution
         self.sensor.on_idle = self.on_idle
-        self.sensor.start(debug=False)
+        self.firebase.push_heartrate_request(True)
+        self.sensor.start()
 
 def test():
     br = BikeRoutine(lambda: BikeSensor())
